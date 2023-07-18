@@ -1,0 +1,75 @@
+import streamlit as st
+import pandas as pd
+from PIL import Image
+from streamlit_option_menu import option_menu
+from streamlit_extras.switch_page_button import switch_page
+from store_level_view import show_store_level_view
+from need_want_view import show_need_want_view
+from assortment_codes import asso_codes
+# Set the Streamlit page configuration
+#Sst.set_page_config(layout="wide")
+
+# Define your sidebar content
+def sidebar():
+    st.sidebar.image("logo4.png", use_column_width=True)
+    st.sidebar.markdown("*Powered by RACE*")
+    st.sidebar.markdown("AssortEdge - Localization Toolkit Provides Recommendation for Product Assortment Code and Store Level Summary!")
+
+# Define your main content
+def main_content():
+    st.markdown("<h1 style='text-align: center;'>AssortEdge - Localization Toolkit</h1>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True) 
+    st.markdown("<br>", unsafe_allow_html=True) 
+    selected = option_menu(
+        menu_title=None,
+        options=["Home", "Assortment Codes", "Need/Want View", "Store Level View", "Contact"],
+        icons=['house', 'tags', "bar-chart", 'graph-up-arrow', 'phone'],
+        menu_icon="cast",
+        orientation="horizontal",
+        styles={
+            "nav-link": {
+                "text-align": "left",
+                "--hover-color": "#eee",
+                "--select-color": "maroon",
+            }
+        }
+    )
+    if selected == "Home":
+        # Content for homepage
+        st.markdown("**Welcome to AssortEdge** – your cutting-edge solution for assortment optimization and localization in the retail sector.")
+
+        st.markdown("**AssortEdge leverages four pivotal metrics to assign unique assortment codes:**")
+        st.markdown("- **ACV (All Commodity Value):** This value represents a product's potential sales across all stores. AssortEdge uses a proprietary formula that divides the product's sales over a specific period by the cumulative sales contribution of the same sub-family for the same period, thereby offering a fair measure of an item's relative market performance.")
+        st.markdown("- **% Customer Penetration:** A measure of a product's reach amongst customers within a specific product family and store set. AssortEdge calculates this as the ratio of total customers who purchased the product to the total customers who bought from the same family in the same set of stores, providing a valuable gauge of a product's popularity.")
+        st.markdown("- **% Spend Penetration:** This metric reflects the sales penetration of a product against the total sales within the same family in the same set of stores. It is calculated as the ratio of total spend by customers who bought the product to the total spend by customers for the same family within the same set of stores, offering insights into consumer spending patterns.")
+        st.markdown("- **Customer Visits:** An indicator of a product's pull frequency. AssortEdge quantifies this as the average number of visits customers make to purchase the product in Hypermarkets and Supermarkets, providing insights into product-specific shopping habits.")
+
+        st.markdown("By harnessing the power of these metrics, AssortEdge empowers retailers with a granular understanding of their product performance, customer behaviors, and spending patterns. With AssortEdge, you can optimize your retail assortment strategy, driving customer engagement, enhancing shopping experiences, and boosting your bottom line. Welcome to smarter retailing. Welcome to AssortEdge.")
+
+    if selected == "Assortment Codes":
+        # Load the datasets
+        master_data = pd.read_csv("ASSORTMENT_CODES_UPDATED.csv")
+        ethnicity_data = pd.read_excel("Ethnicity.xlsx")
+        substitute_data = pd.read_excel("substitute.xlsx")
+        asso_codes(master_data, ethnicity_data, substitute_data)
+        
+    if selected == "Need/Want View":
+        
+        df_need_want = pd.read_excel('need_want.xlsx')  # Replace with your actual dataframe
+        show_need_want_view(df_need_want)
+        
+    if selected == "Store Level View":
+        df_store = pd.read_csv('store_results1.csv')
+        show_store_level_view(df_store)
+        
+    if selected == "Contact":
+        #st.markdown("<h2>Contact RACE Team For More Information</h2>", unsafe_allow_html=True)
+        st.markdown("")
+        st.markdown("---")
+        st.markdown("<h1 style='text-align: center;'>Contact RACE Team For More Information</h1>", unsafe_allow_html=True)
+        st.markdown("---")
+        #switch_page("Contact")
+
+# Usage
+sidebar()
+main_content()
